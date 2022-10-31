@@ -62,6 +62,12 @@ class Ui_MainWindow(object):
         self.output_reaction_lbl.setFont(font)
         self.output_reaction_lbl.setAlignment(QtCore.Qt.AlignCenter)
         self.output_reaction_lbl.setObjectName("output_reaction_lbl")
+        self.error_lbl = QtWidgets.QLabel(self.coefficients_tab)
+        self.error_lbl.setGeometry(QtCore.QRect(10, 370, 591, 21))
+        self.error_lbl.setStyleSheet("color: red")
+        self.error_lbl.setText("")
+        self.error_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.error_lbl.setObjectName("error_lbl")
         self.tabWidget.addTab(self.coefficients_tab, "")
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
@@ -80,7 +86,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Chemistry Cheat Sheet"))
         self.input_plus_lbl.setText(_translate("MainWindow", "+"))
         self.into_lbl.setText(_translate("MainWindow", "->"))
         self.output_plus_lbl.setText(_translate("MainWindow", "+"))
