@@ -122,7 +122,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="error_lbl">
+     <widget class="QLabel" name="coefficients_error_lbl">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -142,10 +142,126 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_2">
+    <widget class="QWidget" name="mass_calculation_tab">
      <attribute name="title">
       <string>Расчет массовой доли вещества</string>
      </attribute>
+     <widget class="QWidget" name="formLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>595</width>
+        <height>411</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
+       <property name="rowWrapPolicy">
+        <enum>QFormLayout::DontWrapRows</enum>
+       </property>
+       <property name="verticalSpacing">
+        <number>33</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="substance_lbl">
+         <property name="text">
+          <string>Формула вещества</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="substance_edit"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="element_lbl">
+         <property name="text">
+          <string>Элемент</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="element_edit"/>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QPushButton" name="calculate_mass_btn">
+         <property name="text">
+          <string>Рассчитать массовую долю элемента в веществе</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="substance_mass_lbl">
+         <property name="text">
+          <string>Молекулярная масса
+вещества</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="substance_mass_edit"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="element_mass_lbl">
+         <property name="text">
+          <string>Молекулярная масса
+элемента</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="element_mass_edit"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="mass_fraction_lbl">
+         <property name="text">
+          <string>Расчёт массовой доли
+вещества</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLabel" name="mass_calculation_lbl">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="2">
+        <widget class="QLabel" name="output_mass_lbl">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Здесь будет написан итоговый ответ</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0" colspan="2">
+        <widget class="QLabel" name="mass_error_lbl">
+         <property name="styleSheet">
+          <string notr="true">color: red</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">

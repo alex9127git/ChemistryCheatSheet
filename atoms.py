@@ -1,4 +1,5 @@
 from math import gcd
+from database_searcher import get_element_mass
 
 
 class Atoms:
@@ -122,6 +123,15 @@ class Atoms:
                             result = element
                             lcc = m
                 return result
+
+    def calculate_molecular_mass(self):
+        """Вычисляет молекулярную массу атомов в списке."""
+        mass = 0
+        expression = []
+        for atom in self.atoms:
+            mass += get_element_mass(atom) * self.atoms[atom]
+            expression.append(f"{get_element_mass(atom)} x {self.atoms[atom]}")
+        return mass, " + ".join(expression) + f" = {mass:.3f}"
 
 
 def lcm(*integers):

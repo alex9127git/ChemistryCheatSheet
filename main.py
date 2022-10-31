@@ -15,6 +15,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.fill_reaction_btn.clicked.connect(self.fill_reaction)
         self.fill_coefficients_btn.clicked.connect(self.fill_coefficients)
+        self.calculate_mass_btn.clicked.connect(self.calculate_mass)
 
     def fill_reaction(self):
         """Пытается заполнить поля с продуктами реакции."""
@@ -24,71 +25,77 @@ class Window(QMainWindow, Ui_MainWindow):
             substance1 = get_substance(reagent1)
             substance2 = get_substance(reagent2)
         except IndexError:
-            self.error_lbl.setText("Не получилось расшифровать формулу вещества")
+            self.coefficients_error_lbl.setText("Не получилось расшифровать формулу вещества")
             return
         if substance1.__class__ == Oxide:
             if substance1.oxide_type() == "кислотный":
                 if reagent2 == "H2O":
-                    acid = get_acid_from_oxide(reagent1)
-                    self.primary_output_edit.setText(acid)
-                    self.secondary_output_edit.setText("")
-                    self.error_lbl.setText("")
-                    if acid == "":
-                        self.error_lbl.setText("Не получилось автозаполнить реакцию")
+                    try:
+                        acid = get_acid_from_oxide(reagent1)
+                        self.primary_output_edit.setText(acid)
+                        self.secondary_output_edit.setText("")
+                        self.coefficients_error_lbl.setText("")
+                    except QueryNotFoundError:
+                        self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
                 elif substance2.__class__ == Base:
-                    acid = get_substance(get_acid_from_oxide(reagent1))
-                    salt = Salt(substance2.cation, substance2.cation_charge,
-                                acid.anion)
-                    self.primary_output_edit.setText(str(salt))
-                    self.secondary_output_edit.setText("H2O")
-                    self.error_lbl.setText("")
-                    if acid == "":
-                        self.error_lbl.setText("Не получилось автозаполнить реакцию")
+                    try:
+                        acid = get_substance(get_acid_from_oxide(reagent1))
+                        salt = Salt(substance2.cation, substance2.cation_charge,
+                                    acid.anion)
+                        self.primary_output_edit.setText(str(salt))
+                        self.secondary_output_edit.setText("H2O")
+                        self.coefficients_error_lbl.setText("")
+                    except QueryNotFoundError:
+                        self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
                 elif substance2.__class__ == Oxide and substance2.oxide_type() == "основный":
-                    acid = get_substance(get_acid_from_oxide(reagent1))
-                    salt = Salt(substance2.cation, substance2.cation_charge,
-                                acid.anion)
-                    self.primary_output_edit.setText(str(salt))
-                    self.secondary_output_edit.setText("")
-                    self.error_lbl.setText("")
-                    if acid == "":
-                        self.error_lbl.setText("Не получилось автозаполнить реакцию")
+                    try:
+                        acid = get_substance(get_acid_from_oxide(reagent1))
+                        salt = Salt(substance2.cation, substance2.cation_charge,
+                                    acid.anion)
+                        self.primary_output_edit.setText(str(salt))
+                        self.secondary_output_edit.setText("")
+                        self.coefficients_error_lbl.setText("")
+                    except QueryNotFoundError:
+                        self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
             elif substance1.oxide_type() == "основный":
                 if reagent2 == "H2O" and get_element_type(substance1.cation) in (
                         "щелочный металл", "щелочно-земельный металл"):
                     base = Base(substance1.cation, substance1.cation_charge)
                     self.primary_output_edit.setText(str(base))
                     self.secondary_output_edit.setText("")
-                    self.error_lbl.setText("")
+                    self.coefficients_error_lbl.setText("")
                 elif substance2.__class__ == Oxide and substance2.oxide_type() == "кислотный":
-                    acid = get_substance(get_acid_from_oxide(reagent2))
-                    salt = Salt(substance1.cation, substance1.cation_charge,
-                                acid.anion)
-                    self.primary_output_edit.setText(str(salt))
-                    self.secondary_output_edit.setText("")
-                    self.error_lbl.setText("")
-                    if acid == "":
-                        self.error_lbl.setText("Не получилось автозаполнить реакцию")
+                    try:
+                        acid = get_substance(get_acid_from_oxide(reagent2))
+                        salt = Salt(substance1.cation, substance1.cation_charge,
+                                    acid.anion)
+                        self.primary_output_edit.setText(str(salt))
+                        self.secondary_output_edit.setText("")
+                        self.coefficients_error_lbl.setText("")
+                    except QueryNotFoundError:
+                        self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
                 elif substance2.__class__ == Acid:
                     salt = Salt(substance1.cation, substance1.cation_charge, substance2.anion)
                     self.primary_output_edit.setText(str(salt))
                     self.secondary_output_edit.setText("H2O")
-                    self.error_lbl.setText("")
+                    self.coefficients_error_lbl.setText("")
         elif substance1.__class__ == Acid:
             if substance2.__class__ == str:
                 if compare_reactivity(substance2, substance1.cation) > 0:
                     salt = Salt(substance2, get_cation_charge(substance2), substance1.anion)
                     self.primary_output_edit.setText(str(salt))
                     self.secondary_output_edit.setText("H2")
-                    self.error_lbl.setText("")
+                    self.coefficients_error_lbl.setText("")
                 else:
-                    self.error_lbl.setText("Металл не может вытеснить водород из кислоты")
+                    self.coefficients_error_lbl.setText(
+                        "Металл не может вытеснить водород из кислоты"
+                    )
             elif (substance2.__class__ == Oxide and substance2.oxide_type() == "основный") or \
                     (substance2.__class__ == Base):
                 salt = Salt(substance2.cation, substance2.cation_charge, substance1.anion)
                 self.primary_output_edit.setText(str(salt))
                 self.secondary_output_edit.setText("H2O")
-                self.error_lbl.setText("")
+                self.coefficients_error_lbl.setText("")
 
     def fill_coefficients(self):
         """Заполняет коэффициенты реакции."""
@@ -99,7 +106,9 @@ class Window(QMainWindow, Ui_MainWindow):
         if substance1.__class__ == Acid:
             if substance2.__class__ == str:
                 if compare_reactivity(substance2, substance1.cation) <= 0:
-                    self.error_lbl.setText("Металл не может вытеснить водород из кислоты")
+                    self.coefficients_error_lbl.setText(
+                        "Металл не может вытеснить водород из кислоты"
+                    )
                     return
         reagent3 = self.primary_output_edit.text()
         reagent4 = self.secondary_output_edit.text()
@@ -108,9 +117,9 @@ class Window(QMainWindow, Ui_MainWindow):
         atoms3 = Atoms(reagent3)
         atoms4 = Atoms(reagent4)
         coeff1 = coeff2 = coeff3 = coeff4 = 1
-        self.error_lbl.setText("")
+        self.coefficients_error_lbl.setText("")
         if (atoms1 + atoms2).disparity(atoms3 + atoms4) == "too different":
-            self.error_lbl.setText("Не получилось расставить коэффициенты")
+            self.coefficients_error_lbl.setText("Не получилось расставить коэффициенты")
         else:
             while atoms1 * coeff1 + atoms2 * coeff2 != atoms3 * coeff3 + atoms4 * coeff4:
                 element = (atoms1 * coeff1 + atoms2 * coeff2).disparity(
@@ -137,6 +146,28 @@ class Window(QMainWindow, Ui_MainWindow):
             self.output_reaction_lbl.setText(
                 f"{part1} -> {part2}"
             )
+
+    def calculate_mass(self):
+        """Расчитывает массовую долю выбранного элемента в выбранном веществе."""
+        substance = self.substance_edit.text()
+        try:
+            element = self.element_edit.text()
+            get_element_type(element)
+        except QueryNotFoundError:
+            self.mass_error_lbl.setText("Не получилось найти элемент")
+            return
+        substance_atoms = Atoms(substance)
+        substance_mass, expression = substance_atoms.calculate_molecular_mass()
+        element_mass = get_element_mass(element) * substance_atoms.atoms.get(element, 0)
+        self.substance_mass_edit.setText(expression)
+        self.element_mass_edit.setText(f"{element_mass:.3f}")
+        mass_fraction = element_mass / substance_mass
+        self.mass_calculation_lbl.setText(
+            f"{element_mass:.3f} / {substance_mass:.3f} = {mass_fraction:.5f}"
+        )
+        self.output_mass_lbl.setText(
+            f"Массовая доля {element} в {substance} составляет {mass_fraction * 100:.3f}%"
+        )
 
 
 if __name__ == '__main__':

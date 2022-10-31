@@ -1,5 +1,5 @@
 import math
-from database_searcher import get_anion_charge, get_element_type, get_anion
+from database_searcher import get_anion_charge, get_element_type, get_anion, QueryNotFoundError
 
 
 class Substance:
@@ -75,9 +75,12 @@ class Salt(Substance):
 
 def get_substance(formula):
     """Возвращает вещество по его строковой формуле."""
-    if get_element_type(formula) != "":
+    try:
+        get_element_type(formula)
         return formula
-    elif formula.startswith("H"):
+    except QueryNotFoundError:
+        pass
+    if formula.startswith("H"):
         if formula[1].isnumeric():
             cation_count = int(formula[1])
             index = 2

@@ -1,13 +1,20 @@
 import sqlite3
 
 
+class QueryNotFoundError(Exception):
+    pass
+
+
 def get_anion_charge(anion):
     """Возвращает заряд аниона из базы данных по его формуле."""
     con = sqlite3.connect("elements_db.sqlite")
     cur = con.cursor()
     result = cur.execute(f"select charge from anions where formula = '{anion}'").fetchone()
     con.close()
-    return result[0]
+    if result:
+        return result[0]
+    else:
+        raise QueryNotFoundError(f"Анион {anion} не найден")
 
 
 def get_element_type(element):
@@ -22,7 +29,7 @@ def get_element_type(element):
     if result:
         return result[0]
     else:
-        return ""
+        raise QueryNotFoundError(f"Элемент {element} не найден")
 
 
 def get_acid_from_oxide(oxide):
@@ -36,7 +43,7 @@ def get_acid_from_oxide(oxide):
     if result:
         return result[0]
     else:
-        return ""
+        raise QueryNotFoundError("Соответствуюшая кислота не найдена")
 
 
 def get_anion(formula):
@@ -85,4 +92,18 @@ def get_cation_charge(cation):
     if result:
         return result[0]
     else:
-        return ""
+        raise QueryNotFoundError(f"Катион {cation} не найден")
+
+
+def get_element_mass(element):
+    """Возвращает тип элемента из базы данных по его символу."""
+    con = sqlite3.connect("elements_db.sqlite")
+    cur = con.cursor()
+    result = cur.execute(
+        f"""select mass from elements where symbol = '{element}'"""
+    ).fetchone()
+    con.close()
+    if result:
+        return result[0]
+    else:
+        raise QueryNotFoundError(f"Элемент {element} не найден")
