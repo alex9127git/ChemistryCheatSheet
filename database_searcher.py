@@ -104,6 +104,6 @@ def get_element_mass(element):
     ).fetchone()
     con.close()
     if result:
-        return result[0]
+        return round(result[0]) if element != "Cl" else 35.5
     else:
         raise QueryNotFoundError(f"Элемент {element} не найден")

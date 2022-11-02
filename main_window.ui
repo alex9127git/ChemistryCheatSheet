@@ -263,15 +263,346 @@
       </layout>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_3">
+    <widget class="QWidget" name="formula_calculation_tab">
      <attribute name="title">
       <string>Расчет формулы по массовой доле</string>
      </attribute>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>591</width>
+        <height>411</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>20</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="element1_layout">
+         <item>
+          <widget class="QLabel" name="element1_lbl">
+           <property name="text">
+            <string>Элемент 1</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="element1_edit"/>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="element1_spinbox">
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="percent_lbl_1">
+           <property name="text">
+            <string>%</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="element2_layout">
+         <item>
+          <widget class="QLabel" name="element2_lbl">
+           <property name="text">
+            <string>Элемент 2</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="element2_edit"/>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="element2_spinbox">
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="percent_lbl_2">
+           <property name="text">
+            <string>%</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="element3_layout">
+         <item>
+          <widget class="QLabel" name="element3_lbl">
+           <property name="text">
+            <string>Элемент 3</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="element3_edit"/>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="element3_spinbox">
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="percent_lbl_3">
+           <property name="text">
+            <string>%</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="element4_layout">
+         <item>
+          <widget class="QLabel" name="element4_lbl">
+           <property name="text">
+            <string>Элемент 4</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="element4_edit"/>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="element4_spinbox">
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="percent_lbl_4">
+           <property name="text">
+            <string>%</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPushButton" name="calculate_formula_btn">
+         <property name="text">
+          <string>Рассчитать формулу вещества по массовой доле</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="output_formula_lbl">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Здесь будет написана итоговая формула</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="formula_error_lbl">
+         <property name="styleSheet">
+          <string notr="true">color: red</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
-    <widget class="QWidget" name="tab_4">
+    <widget class="QWidget" name="equation_tab">
      <attribute name="title">
       <string>Расчет по УХР</string>
      </attribute>
+     <widget class="QWidget" name="verticalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>591</width>
+        <height>411</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QHBoxLayout" name="equation_area">
+         <item>
+          <widget class="QLineEdit" name="eq_primary_input_edit"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="eq_input_plus_lbl">
+           <property name="text">
+            <string>+</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="eq_secondary_input_edit"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="eq_into_lbl">
+           <property name="text">
+            <string>-&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="eq_primary_output_edit"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="eq_output_plus_lbl">
+           <property name="text">
+            <string>+</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="eq_secondary_output_edit"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="eq_mass1_lbl">
+           <property name="text">
+            <string>Масса вещества</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="eq_substance1_edit"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="equals_lbl">
+           <property name="text">
+            <string>=</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="eq_mass_edit"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="g_lbl">
+           <property name="text">
+            <string>г</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="eq_mass2_lbl">
+           <property name="text">
+            <string>Найти массу вещества</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="eq_substance2_edit"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPushButton" name="calculate_equation_btn">
+         <property name="text">
+          <string>Рассчитать массу вещества по уравнению</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="equation_lbl">
+         <property name="text">
+          <string>Уравнение с коэффициентами:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="substance1_qty_lbl">
+         <property name="text">
+          <string>Количество известного вещества:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="mol_fraction_lbl">
+         <property name="text">
+          <string>Мольное соотношение известного вещества к неизвестному:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="substance2_mass_lbl">
+         <property name="text">
+          <string>Масса неизвестного вещества:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="output_equation_lbl">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Здесь будет написан ответ задачи</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="equation_error_lbl">
+         <property name="styleSheet">
+          <string notr="true">color: red</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </widget>
   </widget>

@@ -131,7 +131,7 @@ class Atoms:
         for atom in self.atoms:
             mass += get_element_mass(atom) * self.atoms[atom]
             expression.append(f"{get_element_mass(atom)} x {self.atoms[atom]}")
-        return mass, " + ".join(expression) + f" = {mass:.3f}"
+        return mass, " + ".join(expression) + f" = {mass:.1f}"
 
 
 def lcm(*integers):
