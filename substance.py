@@ -75,6 +75,8 @@ class Salt(Substance):
 
 def get_substance(formula):
     """Возвращает вещество по его строковой формуле."""
+    if formula == "":
+        return ""
     try:
         get_element_type(formula)
         return formula

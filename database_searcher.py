@@ -107,3 +107,18 @@ def get_element_mass(element):
         return round(result[0]) if element != "Cl" else 35.5
     else:
         raise QueryNotFoundError(f"Элемент {element} не найден")
+
+
+def get_solubility(substance):
+    """Возвращает растворимость данного вещества."""
+    con = sqlite3.connect("elements_db.sqlite")
+    cur = con.cursor()
+    result = cur.execute(
+        f"""select [{substance.cation}+{substance.cation_charge}] from solubility where anion_id = 
+        (select id from anions where formula = '{substance.anion}')"""
+    ).fetchone()
+    con.close()
+    if result:
+        return result[0]
+    else:
+        raise QueryNotFoundError(f"Вещество не найдено")

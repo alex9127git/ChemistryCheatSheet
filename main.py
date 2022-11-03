@@ -31,6 +31,7 @@ class Window(QMainWindow, Ui_MainWindow):
         """Пытается заполнить поля с продуктами реакции."""
         reagent1 = self.primary_input_edit.text()
         reagent2 = self.secondary_input_edit.text()
+        self.coefficients_error_lbl.setText("")
         try:
             substance1 = get_substance(reagent1)
             substance2 = get_substance(reagent2)
@@ -44,7 +45,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         acid = get_acid_from_oxide(reagent1)
                         self.primary_output_edit.setText(acid)
                         self.secondary_output_edit.setText("")
-                        self.coefficients_error_lbl.setText("")
                     except QueryNotFoundError:
                         self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
                 elif substance2.__class__ == Base:
@@ -54,7 +54,6 @@ class Window(QMainWindow, Ui_MainWindow):
                                     acid.anion)
                         self.primary_output_edit.setText(str(salt))
                         self.secondary_output_edit.setText("H2O")
-                        self.coefficients_error_lbl.setText("")
                     except QueryNotFoundError:
                         self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
                 elif substance2.__class__ == Oxide and substance2.oxide_type() == "основный":
@@ -64,7 +63,6 @@ class Window(QMainWindow, Ui_MainWindow):
                                     acid.anion)
                         self.primary_output_edit.setText(str(salt))
                         self.secondary_output_edit.setText("")
-                        self.coefficients_error_lbl.setText("")
                     except QueryNotFoundError:
                         self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
             elif substance1.oxide_type() == "основный":
@@ -73,7 +71,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     base = Base(substance1.cation, substance1.cation_charge)
                     self.primary_output_edit.setText(str(base))
                     self.secondary_output_edit.setText("")
-                    self.coefficients_error_lbl.setText("")
                 elif substance2.__class__ == Oxide and substance2.oxide_type() == "кислотный":
                     try:
                         acid = get_substance(get_acid_from_oxide(reagent2))
@@ -81,21 +78,18 @@ class Window(QMainWindow, Ui_MainWindow):
                                     acid.anion)
                         self.primary_output_edit.setText(str(salt))
                         self.secondary_output_edit.setText("")
-                        self.coefficients_error_lbl.setText("")
                     except QueryNotFoundError:
                         self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
                 elif substance2.__class__ == Acid:
                     salt = Salt(substance1.cation, substance1.cation_charge, substance2.anion)
                     self.primary_output_edit.setText(str(salt))
                     self.secondary_output_edit.setText("H2O")
-                    self.coefficients_error_lbl.setText("")
         elif substance1.__class__ == Acid:
             if substance2.__class__ == str:
                 if compare_reactivity(substance2, substance1.cation) > 0:
                     salt = Salt(substance2, get_cation_charge(substance2), substance1.anion)
                     self.primary_output_edit.setText(str(salt))
                     self.secondary_output_edit.setText("H2")
-                    self.coefficients_error_lbl.setText("")
                 else:
                     self.coefficients_error_lbl.setText(
                         "Металл не может вытеснить водород из кислоты"
@@ -105,7 +99,108 @@ class Window(QMainWindow, Ui_MainWindow):
                 salt = Salt(substance2.cation, substance2.cation_charge, substance1.anion)
                 self.primary_output_edit.setText(str(salt))
                 self.secondary_output_edit.setText("H2O")
-                self.coefficients_error_lbl.setText("")
+            elif substance2.__class__ == Salt:
+                acid = Acid(substance2.anion)
+                salt = Salt(substance2.cation, substance2.cation_charge, substance1.anion)
+                if str(acid) not in ("H2CO3", "H2SO3"):
+                    try:
+                        if get_solubility(salt) == "Р" and get_solubility(acid) == "Р":
+                            self.coefficients_error_lbl.setText(
+                                "Один из продуктов реакции должен быть нерастворим")
+                            return
+                    except QueryNotFoundError:
+                        self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
+                self.primary_output_edit.setText(str(acid))
+                self.secondary_output_edit.setText(str(salt))
+        elif substance1.__class__ == Base:
+            if substance2.__class__ == Oxide and substance2.oxide_type() == "кислотный":
+                try:
+                    acid = get_substance(get_acid_from_oxide(reagent1))
+                    salt = Salt(substance2.cation, substance2.cation_charge,
+                                acid.anion)
+                    self.primary_output_edit.setText(str(salt))
+                    self.secondary_output_edit.setText("H2O")
+                except QueryNotFoundError:
+                    self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
+            elif substance2.__class__ == Acid:
+                salt = Salt(substance1.cation, substance1.cation_charge, substance2.anion)
+                self.primary_output_edit.setText(str(salt))
+                self.secondary_output_edit.setText("H2O")
+            elif substance2.__class__ == Salt:
+                try:
+                    if get_solubility(substance1) == "Р" and get_solubility(substance2) == "Р":
+                        salt = Salt(substance1.cation, substance1.cation_charge, substance2.anion)
+                        base = Base(substance2.cation, substance2.cation_charge)
+                        if get_solubility(salt) == "Р" and get_solubility(base) == "Р":
+                            self.coefficients_error_lbl.setText(
+                                "Один из продуктов реакции должен быть нерастворим")
+                            return
+                        self.primary_output_edit.setText(str(base))
+                        self.secondary_output_edit.setText(str(salt))
+                except QueryNotFoundError:
+                    self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
+            elif substance2 == "":
+                try:
+                    if get_solubility(substance1) == "Р":
+                        self.coefficients_error_lbl.setText("Основание должно быть нерастворимо")
+                        return
+                    oxide = Oxide(substance1.cation, substance1.cation_charge)
+                    self.primary_output_edit.setText(str(oxide))
+                    self.secondary_output_edit.setText("H2O")
+                except QueryNotFoundError:
+                    self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
+        elif substance1.__class__ == Salt:
+            if substance2.__class__ == Acid:
+                acid = Acid(substance1.anion)
+                salt = Salt(substance1.cation, substance1.cation_charge, substance2.anion)
+                if str(acid) not in ("H2CO3", "H2SO3"):
+                    try:
+                        if get_solubility(salt) == "Р" and get_solubility(acid) == "Р":
+                            self.coefficients_error_lbl.setText(
+                                "Один из продуктов реакции должен быть нерастворим")
+                            return
+                    except QueryNotFoundError:
+                        self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
+                self.primary_output_edit.setText(str(acid))
+                self.secondary_output_edit.setText(str(salt))
+            elif substance2.__class__ == Base:
+                try:
+                    if get_solubility(substance2) == "Р" and get_solubility(substance1) == "Р":
+                        salt = Salt(substance2.cation, substance2.cation_charge, substance1.anion)
+                        base = Base(substance1.cation, substance1.cation_charge)
+                        if get_solubility(salt) == "Р" and get_solubility(base) == "Р":
+                            self.coefficients_error_lbl.setText(
+                                "Один из продуктов реакции должен быть нерастворим")
+                            return
+                        self.primary_output_edit.setText(str(base))
+                        self.secondary_output_edit.setText(str(salt))
+                except QueryNotFoundError:
+                    self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
+            elif substance2.__class__ == Salt:
+                try:
+                    if get_solubility(substance2) == "Р" and get_solubility(substance1) == "Р":
+                        result_salt1 = Salt(
+                            substance2.cation, substance2.cation_charge, substance1.anion)
+                        result_salt2 = Salt(
+                            substance1.cation, substance1.cation_charge, substance2.anion)
+                        if get_solubility(result_salt1) == "Р" and get_solubility(
+                                result_salt2) == "Р":
+                            self.coefficients_error_lbl.setText(
+                                "Один из продуктов реакции должен быть нерастворим")
+                            return
+                        self.primary_output_edit.setText(str(result_salt1))
+                        self.secondary_output_edit.setText(str(result_salt2))
+                except QueryNotFoundError:
+                    self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
+            elif substance2.__class__ == str:
+                if compare_reactivity(substance2, substance1.cation) > 0:
+                    salt = Salt(substance2, get_cation_charge(substance2), substance1.anion)
+                    self.primary_output_edit.setText(str(salt))
+                    self.secondary_output_edit.setText(substance1.cation)
+                else:
+                    self.coefficients_error_lbl.setText(
+                        "Металл недостаточно активен, чтобы вытеснить металл из соли"
+                    )
 
     def fill_coefficients(self):
         """Заполняет коэффициенты реакции."""
@@ -124,6 +219,79 @@ class Window(QMainWindow, Ui_MainWindow):
                         "Металл не может вытеснить водород из кислоты"
                     )
                     return
+            elif substance2.__class__ == Salt:
+                acid = Acid(substance2.anion)
+                salt = Salt(substance2.cation, substance2.cation_charge, substance1.anion)
+                if str(acid) not in ("H2CO3", "H2SO3"):
+                    try:
+                        if get_solubility(salt) == "Р" and get_solubility(acid) == "Р":
+                            self.coefficients_error_lbl.setText(
+                                "Один из продуктов реакции должен быть нерастворим")
+                            return
+                    except QueryNotFoundError:
+                        pass
+        elif substance1.__class__ == Base:
+            if substance2.__class__ == Salt:
+                try:
+                    if get_solubility(substance1) == "Р" and get_solubility(substance2) == "Р":
+                        salt = Salt(substance1.cation, substance1.cation_charge, substance2.anion)
+                        base = Base(substance2.cation, substance2.cation_charge)
+                        if get_solubility(salt) == "Р" and get_solubility(base) == "Р":
+                            self.coefficients_error_lbl.setText(
+                                "Один из продуктов реакции должен быть нерастворим")
+                            return
+                except QueryNotFoundError:
+                    pass
+            elif substance2 == "":
+                try:
+                    if get_solubility(substance1) == "Р":
+                        self.coefficients_error_lbl.setText("Основание должно быть нерастворимо")
+                        return
+                except QueryNotFoundError:
+                    self.coefficients_error_lbl.setText("Не получилось автозаполнить реакцию")
+        elif substance1.__class__ == Salt:
+            if substance2.__class__ == Acid:
+                acid = Acid(substance1.anion)
+                salt = Salt(substance1.cation, substance1.cation_charge, substance2.anion)
+                if str(acid) not in ("H2CO3", "H2SO3"):
+                    try:
+                        if get_solubility(salt) == "Р" and get_solubility(acid) == "Р":
+                            self.coefficients_error_lbl.setText(
+                                "Один из продуктов реакции должен быть нерастворим")
+                            return
+                    except QueryNotFoundError:
+                        pass
+            elif substance2.__class__ == Base:
+                try:
+                    if get_solubility(substance2) == "Р" and get_solubility(substance1) == "Р":
+                        salt = Salt(substance2.cation, substance2.cation_charge, substance1.anion)
+                        base = Base(substance1.cation, substance1.cation_charge)
+                        if get_solubility(salt) == "Р" and get_solubility(base) == "Р":
+                            self.coefficients_error_lbl.setText(
+                                "Один из продуктов реакции должен быть нерастворим")
+                            return
+                except QueryNotFoundError:
+                    pass
+            elif substance2.__class__ == Salt:
+                try:
+                    if get_solubility(substance2) == "Р" and get_solubility(substance1) == "Р":
+                        result_salt1 = Salt(
+                            substance2.cation, substance2.cation_charge, substance1.anion)
+                        result_salt2 = Salt(
+                            substance1.cation, substance1.cation_charge, substance2.anion)
+                        if get_solubility(result_salt1) == "Р" and get_solubility(
+                                result_salt2) == "Р":
+                            self.coefficients_error_lbl.setText(
+                                "Один из продуктов реакции должен быть нерастворим")
+                            return
+                except QueryNotFoundError:
+                    pass
+            elif substance2.__class__ == str:
+                if compare_reactivity(substance2, substance1.cation) <= 0:
+                    self.coefficients_error_lbl.setText(
+                        "Металл недостаточно активен, чтобы вытеснить металл из соли"
+                    )
+                    return
         reagent3 = self.primary_output_edit.text()
         reagent4 = self.secondary_output_edit.text()
         self.coefficients_error_lbl.setText("")
@@ -135,8 +303,18 @@ class Window(QMainWindow, Ui_MainWindow):
             coeff1, coeff2, coeff3, coeff4 = coeffs
             str1 = f"{coeff1} {reagent1}" if reagent1 else ""
             str2 = f"{coeff2} {reagent2}" if reagent2 else ""
-            str3 = f"{coeff3} {reagent3}" if reagent3 else ""
-            str4 = f"{coeff4} {reagent4}" if reagent4 else ""
+            if reagent3 == "H2CO3":
+                str3 = f"{coeff3} H2O + {coeff3} CO2"
+            elif reagent3 == "H2SO3":
+                str3 = f"{coeff3} H2O + {coeff3} SO2"
+            else:
+                str3 = f"{coeff3} {reagent3}" if reagent3 else ""
+            if reagent4 == "H2CO3":
+                str4 = f"{coeff4} H2O + {coeff4} CO2"
+            elif reagent4 == "H2SO3":
+                str4 = f"{coeff4} H2O + {coeff4} SO2"
+            else:
+                str4 = f"{coeff4} {reagent4}" if reagent4 else ""
             part1 = " + ".join(filter(lambda x: x, (str1, str2)))
             part2 = " + ".join(filter(lambda x: x, (str3, str4)))
             self.output_reaction_lbl.setText(
