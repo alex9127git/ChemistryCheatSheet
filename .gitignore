@@ -1,1 +1,4 @@
 query_history.txt
+build/
+dist/
+*.spec
