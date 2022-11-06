@@ -23,9 +23,296 @@
       <height>461</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="tabShape">
+     <enum>QTabWidget::Rounded</enum>
+    </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
+    <property name="usesScrollButtons">
+     <bool>true</bool>
+    </property>
+    <property name="documentMode">
+     <bool>false</bool>
+    </property>
+    <property name="movable">
+     <bool>false</bool>
+    </property>
+    <property name="tabBarAutoHide">
+     <bool>false</bool>
+    </property>
+    <widget class="QWidget" name="periodicTable_tab">
+     <attribute name="title">
+      <string>Периодическая таблица</string>
+     </attribute>
+     <widget class="QTableWidget" name="periodicTable_tabwidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>591</width>
+        <height>411</height>
+       </rect>
+      </property>
+      <property name="rowCount">
+       <number>118</number>
+      </property>
+      <property name="columnCount">
+       <number>4</number>
+      </property>
+      <attribute name="horizontalHeaderCascadingSectionResizes">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>130</number>
+      </attribute>
+      <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>false</bool>
+      </attribute>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <column>
+       <property name="text">
+        <string>Символ элемента</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Название элемента</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Тип элемента</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Молекулярная масса</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QLabel" name="bg_pt">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>621</width>
+        <height>441</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>bg.png</pixmap>
+      </property>
+     </widget>
+     <zorder>bg_pt</zorder>
+     <zorder>periodicTable_tabwidget</zorder>
+    </widget>
+    <widget class="QWidget" name="solubilityTable_tab">
+     <attribute name="title">
+      <string>Таблица растворимости</string>
+     </attribute>
+     <widget class="QTableWidget" name="solubilityTable_tabwidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>591</width>
+        <height>411</height>
+       </rect>
+      </property>
+      <property name="rowCount">
+       <number>13</number>
+      </property>
+      <property name="columnCount">
+       <number>22</number>
+      </property>
+      <attribute name="horizontalHeaderMinimumSectionSize">
+       <number>50</number>
+      </attribute>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>50</number>
+      </attribute>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+     </widget>
+     <widget class="QLabel" name="bg_st">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>621</width>
+        <height>441</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>bg.png</pixmap>
+      </property>
+     </widget>
+     <zorder>bg_st</zorder>
+     <zorder>solubilityTable_tabwidget</zorder>
+    </widget>
     <widget class="QWidget" name="coefficients_tab">
      <attribute name="title">
       <string>Коэффициенты УХР</string>
@@ -141,6 +428,28 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
+     <widget class="QLabel" name="bg_cf">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>621</width>
+        <height>441</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>bg.png</pixmap>
+      </property>
+     </widget>
+     <zorder>bg_cf</zorder>
+     <zorder>horizontalLayoutWidget</zorder>
+     <zorder>fill_reaction_btn</zorder>
+     <zorder>fill_coefficients_btn</zorder>
+     <zorder>output_reaction_lbl</zorder>
+     <zorder>coefficients_error_lbl</zorder>
     </widget>
     <widget class="QWidget" name="mass_calculation_tab">
      <attribute name="title">
@@ -262,6 +571,24 @@
        </item>
       </layout>
      </widget>
+     <widget class="QLabel" name="bg_ms">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>621</width>
+        <height>441</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>bg.png</pixmap>
+      </property>
+     </widget>
+     <zorder>bg_ms</zorder>
+     <zorder>formLayoutWidget</zorder>
     </widget>
     <widget class="QWidget" name="formula_calculation_tab">
      <attribute name="title">
@@ -441,6 +768,24 @@
        </item>
       </layout>
      </widget>
+     <widget class="QLabel" name="bg_fl">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>621</width>
+        <height>441</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>bg.png</pixmap>
+      </property>
+     </widget>
+     <zorder>bg_fl</zorder>
+     <zorder>verticalLayoutWidget</zorder>
     </widget>
     <widget class="QWidget" name="equation_tab">
      <attribute name="title">
@@ -602,6 +947,55 @@
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QLabel" name="bg_eq">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>621</width>
+        <height>441</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>bg.png</pixmap>
+      </property>
+     </widget>
+     <zorder>bg_eq</zorder>
+     <zorder>verticalLayoutWidget_2</zorder>
+    </widget>
+    <widget class="QWidget" name="query_history_tab">
+     <attribute name="title">
+      <string>История операций</string>
+     </attribute>
+     <widget class="QLabel" name="bg_qh">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>621</width>
+        <height>441</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>bg.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="query_history">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>591</width>
+        <height>411</height>
+       </rect>
+      </property>
      </widget>
     </widget>
    </widget>

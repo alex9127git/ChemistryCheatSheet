@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem
 
 from atoms import *
 from main_window import Ui_MainWindow
@@ -21,11 +21,40 @@ class Window(QMainWindow, Ui_MainWindow):
         """Инициализация окна программы."""
         super().__init__()
         self.setupUi(self)
+        con = sqlite3.connect("elements_db.sqlite")
+        cur = con.cursor()
+        result = cur.execute(
+            """select symbol, name, element_types.type, mass from elements 
+            left join element_types on element_types.id = elements.type"""
+        ).fetchall()
+        for i, elem in enumerate(result):
+            for j, item in enumerate(elem):
+                self.periodicTable_tabwidget.setItem(i, j, QTableWidgetItem(str(item)))
+        result = cur.execute(
+            """select anions.formula, anions.charge, "H+1", "Li+1", "K+1", "Na+1", "NH4+1", "Ba+2", 
+            "Ca+2", "Mg+2", "Sr+2", "Al+3", "Cr+3", "Fe+2", "Fe+3", "Ni+2", "Co+2", "Mn+2", "Zn+2", 
+            "Ag+1", "Hg+2", "Pb+2", "Sn+2", "Cu+2" 
+            from solubility left join anions on solubility.anion_id = anions.id"""
+        ).fetchall()
+        cations = ("H+1", "Li+1", "K+1", "Na+1", "NH4+1", "Ba+2", "Ca+2", "Mg+2", "Sr+2", "Al+3",
+                   "Cr+3", "Fe+2", "Fe+3", "Ni+2", "Co+2", "Mn+2", "Zn+2", "Ag+1", "Hg+2", "Pb+2",
+                   "Sn+2", "Cu+2")
+        self.solubilityTable_tabwidget.setVerticalHeaderLabels(
+            map(lambda x: f"{x[0]} ({-x[1]}-)", result)
+        )
+        self.solubilityTable_tabwidget.setHorizontalHeaderLabels(
+            map(lambda x: " (".join(x.split("+")) + "+)", cations)
+        )
+        for i, elem in enumerate(result):
+            for j, item in enumerate(elem[2:]):
+                self.solubilityTable_tabwidget.setItem(i, j, QTableWidgetItem(str(item)))
         self.fill_reaction_btn.clicked.connect(self.fill_reaction)
         self.fill_coefficients_btn.clicked.connect(self.fill_coefficients)
         self.calculate_mass_btn.clicked.connect(self.calculate_mass)
         self.calculate_formula_btn.clicked.connect(self.calculate_formula)
         self.calculate_equation_btn.clicked.connect(self.calculate_equation)
+        self.query_history.itemDoubleClicked.connect(self.go_to_operation)
+        self.update_history()
 
     def fill_reaction(self):
         """Пытается заполнить поля с продуктами реакции."""
@@ -320,6 +349,12 @@ class Window(QMainWindow, Ui_MainWindow):
             self.output_reaction_lbl.setText(
                 f"{part1} -> {part2}"
             )
+            with open("query_history.txt", "a", encoding="utf-8") as history:
+                history.write(
+                    "Расстановка коэффициентов: " +
+                    f"{reagent1} + {reagent2} -> {reagent3} + {reagent4}\n"
+                )
+        self.update_history()
 
     def calculate_mass(self):
         """Рассчитывает массовую долю выбранного элемента в выбранном веществе."""
@@ -342,6 +377,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.output_mass_lbl.setText(
             f"Массовая доля {element} в {substance} составляет {mass_fraction * 100:.3f}%"
         )
+        with open("query_history.txt", "a", encoding="utf-8") as history:
+            history.write(
+                f"Расчет массовой доли {element} в {substance}\n"
+            )
+        self.update_history()
 
     def calculate_formula(self):
         """Рассчитывает формулу вещества по массовым долям его элементов."""
@@ -385,6 +425,14 @@ class Window(QMainWindow, Ui_MainWindow):
             coeffs[index] += 1
             percent = list(map(lambda x: masses[x] * coeffs[x] / percentages[x], range(quantity)))
         self.output_formula_lbl.setText(f"{' : '.join(elements)} = {' : '.join(map(str, coeffs))}")
+        with open("query_history.txt", "a", encoding="utf-8") as history:
+            history.write(
+                "Расчет формулы: " +
+                '; '.join(map(
+                    lambda x: f'{elements[x]} = {percentages[x]}', range(len(elements)))
+                ) + "\n"
+            )
+        self.update_history()
 
     def calculate_coefficients(self, reagent1, reagent2, reagent3, reagent4):
         atoms1 = Atoms(reagent1)
@@ -463,6 +511,62 @@ class Window(QMainWindow, Ui_MainWindow):
         self.substance2_mass_lbl.setText(
             f"Масса неизвестного вещества: {r_mol:.3f} * {round(mol_mass)} = {r_mass:.3f} г")
         self.output_equation_lbl.setText(f"Масса {found_reagent} = {r_mass:.3f}")
+        with open("query_history.txt", "a", encoding="utf-8") as history:
+            history.write(
+                f"Расчет массы элемента {found_reagent}; m({known_reagent}) = {mass} г; " +
+                f"{reagent1} + {reagent2} -> {reagent3} + {reagent4}\n"
+            )
+        self.update_history()
+
+    def update_history(self):
+        self.query_history.clear()
+        with open("query_history.txt", "r", encoding="utf-8") as history:
+            for operation in history.readlines()[::-1]:
+                self.query_history.addItem(operation.strip())
+
+    def go_to_operation(self):
+        operation = self.query_history.selectedItems()[0].text()
+        if operation.startswith("Расстановка коэффициентов"):
+            self.tabWidget.setCurrentIndex(2)
+            _, _, i1, _, i2, _, i3, _, i4 = operation.split()
+            self.primary_input_edit.setText(i1)
+            self.secondary_input_edit.setText(i2)
+            self.primary_output_edit.setText(i3)
+            self.secondary_output_edit.setText(i4)
+            self.fill_coefficients()
+        elif operation.startswith("Расчет массовой доли"):
+            self.tabWidget.setCurrentIndex(3)
+            _, _, _, element, _, substance = operation.split()
+            self.substance_edit.setText(substance)
+            self.element_edit.setText(element)
+            self.calculate_mass()
+        elif operation.startswith("Расчет формулы"):
+            self.tabWidget.setCurrentIndex(4)
+            index = 2
+            count = 0
+            edits = (self.element1_edit, self.element2_edit, self.element3_edit, self.element4_edit)
+            spin_boxes = (self.element1_spinbox, self.element2_spinbox, self.element3_spinbox,
+                          self.element4_spinbox)
+            while index < len(operation.split()):
+                edits[count].setText(operation.split()[index])
+                value = operation.split()[index + 2]
+                if value[-1] == ";":
+                    value = value[:-1]
+                spin_boxes[count].setValue(float(value))
+                index += 3
+                count += 1
+            self.calculate_formula()
+        elif operation.startswith("Расчет массы элемента"):
+            self.tabWidget.setCurrentIndex(5)
+            _, _, _, found, known, _, mass, _, r1, _, r2, _, r3, _, r4 = operation.split()
+            self.eq_primary_input_edit.setText(r1)
+            self.eq_secondary_input_edit.setText(r2)
+            self.eq_primary_output_edit.setText(r3)
+            self.eq_secondary_output_edit.setText(r4)
+            self.eq_substance1_edit.setText(known[2:-1])
+            self.eq_substance2_edit.setText(found[:-1])
+            self.eq_mass_edit.setText(mass)
+            self.calculate_equation()
 
 
 if __name__ == '__main__':
