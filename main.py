@@ -7,6 +7,10 @@ from substance import *
 from database_searcher import *
 
 
+history_path = "query_history.txt"
+bg_path = os.path.join(BASE_DIR, "bg.png")
+
+
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
@@ -21,7 +25,7 @@ class Window(QMainWindow, Ui_MainWindow):
         """Инициализация окна программы."""
         super().__init__()
         self.setupUi(self)
-        con = sqlite3.connect("elements_db.sqlite")
+        con = sqlite3.connect(db_path)
         cur = con.cursor()
         result = cur.execute(
             """select symbol, name, element_types.type, mass from elements 
@@ -520,7 +524,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def update_history(self):
         self.query_history.clear()
-        with open("query_history.txt", "r", encoding="utf-8") as history:
+        with open(history_path, "r", encoding="utf-8") as history:
             for operation in history.readlines()[::-1]:
                 self.query_history.addItem(operation.strip())
 

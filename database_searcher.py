@@ -1,4 +1,9 @@
 import sqlite3
+import os
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(BASE_DIR, "elements_db.sqlite")
 
 
 class QueryNotFoundError(Exception):
@@ -7,7 +12,7 @@ class QueryNotFoundError(Exception):
 
 def get_anion_charge(anion):
     """Возвращает заряд аниона из базы данных по его формуле."""
-    con = sqlite3.connect("elements_db.sqlite")
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
     result = cur.execute(f"select charge from anions where formula = '{anion}'").fetchone()
     con.close()
@@ -19,7 +24,7 @@ def get_anion_charge(anion):
 
 def get_element_type(element):
     """Возвращает тип элемента из базы данных по его символу."""
-    con = sqlite3.connect("elements_db.sqlite")
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
     result = cur.execute(
         f"""select type from element_types where id = (
@@ -34,7 +39,7 @@ def get_element_type(element):
 
 def get_acid_from_oxide(oxide):
     """По оксиду находит кислоту из базы данных, которая создается с помощью этого оксида и воды."""
-    con = sqlite3.connect("elements_db.sqlite")
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
     result = cur.execute(
         f"""select acid from anions where oxide = '{oxide}'"""
@@ -48,7 +53,7 @@ def get_acid_from_oxide(oxide):
 
 def get_anion(formula):
     """Находит в формуле соли или кислоты кислотный остаток (анион)."""
-    con = sqlite3.connect("elements_db.sqlite")
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
     result = sorted(map(lambda x: x[0], cur.execute(
         f"""select formula from anions"""
@@ -64,7 +69,7 @@ def compare_reactivity(element1, element2):
     """Сравнивает электроотрицательность двух металлов. Возвращает положительное число, если первый
     металл находится в ряду электрохимических напряжений левее второго, или отрицательное число,
     если второй металл левее первого в этом ряду. Если два элемента одинаковые, возвращает 0."""
-    con = sqlite3.connect("elements_db.sqlite")
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
     try:
         reactivity1 = cur.execute(
@@ -82,7 +87,7 @@ def compare_reactivity(element1, element2):
 
 def get_cation_charge(cation):
     """Возвращает заряд катиона из базы данных по его формуле."""
-    con = sqlite3.connect("elements_db.sqlite")
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
     result = cur.execute(
         f"""select charge from reactivity where element = 
@@ -97,7 +102,7 @@ def get_cation_charge(cation):
 
 def get_element_mass(element):
     """Возвращает тип элемента из базы данных по его символу."""
-    con = sqlite3.connect("elements_db.sqlite")
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
     result = cur.execute(
         f"""select mass from elements where symbol = '{element}'"""
@@ -111,7 +116,7 @@ def get_element_mass(element):
 
 def get_solubility(substance):
     """Возвращает растворимость данного вещества."""
-    con = sqlite3.connect("elements_db.sqlite")
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
     try:
         result = cur.execute(
